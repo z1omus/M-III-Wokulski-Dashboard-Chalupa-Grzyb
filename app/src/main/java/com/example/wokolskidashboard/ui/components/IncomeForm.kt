@@ -16,36 +16,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun IncomeForm(){
-    Spacer(Modifier.size(20.dp))
-    var name by remember { mutableStateOf("") }
-    var name1 by remember { mutableStateOf("") }
-    var displayName by remember { mutableStateOf("") }
-    OutlinedTextField(
-        value = name,
-        onValueChange = {
-            name = it
-            println("Name: $name")
-        },
-        label = { Text("Enter your name:") },
-        singleLine = true
-    )
-    Spacer(Modifier.size(20.dp))
-    OutlinedTextField(
-        value = name1,
-        onValueChange = {
-            name1 = it
-            println("Name: $name1")
-        },
-        label = { Text("Enter your name:") },
-        singleLine = true
-    )
-    Spacer(Modifier.size(20.dp))
-    Button(
-        modifier = Modifier,
-        onClick = {
-            println("Button Clicked")
-        }) {
-        Text("Show name")
-    }
-
+    TextFieldFun("podaj nazwę towaru:")
+    MoneyFieldFun("podaj cenę towaru")
+    ButtonFun("Zatwierdź zysk", {println("dodano +20rubli")})
 }
