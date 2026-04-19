@@ -4,7 +4,9 @@ import android.R.attr.name
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SingleChoiceSegmentedButtonRowScope
@@ -18,60 +20,66 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun TextFieldFun(
-    desc: String
+fun OutlinedTextFieldFun(
+    desc: String,
+    value: String,
+    onChange:(String)-> Unit
 ){
-    var name by remember { mutableStateOf("") }
+
     OutlinedTextField(
-        value = name,
-        onValueChange = {
-            name = it
-            println("Name: $name")
-        },
+        value = value,
+        onValueChange = onChange,
         label = {Text(desc)},
         singleLine = true
     )
 }
 @Composable
 fun MoneyFieldFun(
-    desc:String
+    desc:String,
+    value: String,
+    onChange:(String)-> Unit,
+    isError: Boolean = false
 ){
-    var amount by remember { mutableStateOf("") }
-    var isValid by remember { mutableStateOf(true) }
-
     OutlinedTextField(
         label = { Text(desc) },
-        value = amount,
-        onValueChange = {
-            newValue -> amount = newValue
-            val number = newValue.toDoubleOrNull()
-            isValid = number!=null && number>0
-        },
-        isError = !isValid
+        value = value,
+        onValueChange = onChange,
+        isError = isError
     )
-    if(!isValid){
-        Text(text = "Wprowadź liczbę większą od 0",
+    if(isError==true){
+        Text(text = "Wprowadź liczbę większą od 0.00 [rubli]",
             color = Color.Red,
             style = MaterialTheme.typography.bodySmall)
     }
-
 }
 @Composable
 fun ButtonFun(
     text: String,
     onClick:()-> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.padding(10.dp),
+    backgroundColor:Color = LightGray,
+    color: Color = Black,
     enabled: Boolean = true
 ){
     Button(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier.padding(10.dp)
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = backgroundColor,
+            contentColor = color
+        )
+
     ){
         Text(text)
     }
 }
+
+
