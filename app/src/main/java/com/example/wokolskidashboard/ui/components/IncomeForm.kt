@@ -55,7 +55,7 @@ fun IncomeForm(onSubmit: (Transaction) -> Unit) {
 
 
         ButtonFun("Zapisz", onClick = {
-            val transaction = Transaction(name, amount.toDouble(), isIncome = true)
+            val transaction = Transaction(name, amount.toDouble(), isIncome = true,false)
             onSubmit(transaction)
             name="";amount="";isValid=false
         },
