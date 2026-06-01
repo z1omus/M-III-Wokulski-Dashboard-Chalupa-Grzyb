@@ -80,7 +80,7 @@ fun MainScreen() {
                     IncomeForm { transaction -> transactions.add(transaction);saldo+=transaction.amount }
                 } else if (isCheckedExpense == true) {
                     //ExpenseForm()
-                    Text("Expenses form")
+                   ExpenseForm { transaction -> transactions.add(transaction);saldo-=transaction.amount }
                 }
             }
             //transactions
