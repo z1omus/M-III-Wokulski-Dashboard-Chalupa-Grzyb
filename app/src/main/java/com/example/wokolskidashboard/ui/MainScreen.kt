@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.wokolskidashboard.R
 import com.example.wokolskidashboard.model.Transaction
 import com.example.wokolskidashboard.ui.components.ButtonFun
+import com.example.wokolskidashboard.ui.components.ExpenseForm
 import com.example.wokolskidashboard.ui.components.IncomeForm
 
 @Composable
@@ -90,7 +91,13 @@ fun MainScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 for (i in transactions) {
-                    Text("${i.name}, ${i.amount} rubli, ${i.isIncome}")
+                    Text("${i.name}, ${i.amount} rubli, ${if(i.isIncome==true) {
+                    "Przychód"
+                    }
+                        else{
+                            "Wychód"
+                    }
+                    }")
                 }
             }
 
