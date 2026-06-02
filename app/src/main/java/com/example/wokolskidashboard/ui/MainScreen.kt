@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,9 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wokolskidashboard.R
 import com.example.wokolskidashboard.model.Transaction
+import com.example.wokolskidashboard.ui.components.BalanceHeader
 import com.example.wokolskidashboard.ui.components.ButtonFun
 import com.example.wokolskidashboard.ui.components.ExpenseForm
 import com.example.wokolskidashboard.ui.components.IncomeForm
+import com.example.wokolskidashboard.ui.components.TransactionCard
 
 @Composable
 fun MainScreen() {
@@ -39,7 +43,7 @@ fun MainScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val transactions = remember { mutableStateListOf<Transaction>() }
-            var saldo: Double = 0.0
+            var saldo by remember { mutableStateOf(0.0) }
 
             var isCheckedIncome by remember { mutableStateOf(false) }
             var isCheckedExpense by remember { mutableStateOf(false) }
@@ -48,12 +52,12 @@ fun MainScreen() {
             }
             val expenseButtonColor = remember(isCheckedIncome) {
                 if (isCheckedExpense) Color.Gray else Color.LightGray
+
             }
-            //saldo
-            Text(modifier = Modifier.padding(20.dp), text = "SALDO ${saldo}")
+
+            BalanceHeader(saldo = saldo)
 
 
-            //formularz
             Column(
                 modifier = Modifier,
                 verticalArrangement = Arrangement.Center,
@@ -66,7 +70,10 @@ fun MainScreen() {
                 ) {
                     ButtonFun(
                         text = "Zysk",
-                        onClick = { isCheckedIncome = true; isCheckedExpense = false },
+                        onClick = {
+                            isCheckedIncome = true
+                            isCheckedExpense = false
+                                  },
                         modifier = Modifier.background(incomeButtonColor).padding(25.dp),
                         backgroundColor = incomeButtonColor
                     )
@@ -78,157 +85,26 @@ fun MainScreen() {
                     )
                 }
                 if (isCheckedIncome == true) {
-                    IncomeForm { transaction -> transactions.add(transaction);saldo+=transaction.amount }
+                    IncomeForm { transaction ->
+                        transactions.add(transaction)
+                        saldo+=transaction.amount }
                 } else if (isCheckedExpense == true) {
-                    //ExpenseForm()
-                   ExpenseForm { transaction -> transactions.add(transaction);saldo-=transaction.amount }
+                    ExpenseForm { transaction -> transactions.add(transaction);saldo-=transaction.amount }
                 }
             }
-            //transactions
-            Column(
-                modifier = Modifier,
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                for (i in transactions) {
-                    Text("${i.name}, ${i.amount} rubli, ${if(i.isIncome==true) {
-                    "Przychód"
-                    }
-                        else{
-                            "Wychód"
-                    }
-                    }")
+
+
+            LazyColumn {
+                items(transactions.reversed()) { transaction ->
+                    TransactionCard(transaction = transaction)
                 }
             }
 
         }
     }
 }
-
-
-
-        /*ExpenseForm(
-                expenseName = expenseName,
-                expenseValue = expenseValue,
-                isWasteful = isWasteful,
-                expenseNameChanged = {expenseName = it},
-                expenseValueChanged = {expenseValue = it.toDouble()},
-                isWastefulValueChanged = {isWasteful = it},
-                {
-                    val expense = Transaction(nextExpenseId, expenseName, expenseValue, false, isWasteful)
-                    expenseList.add(expense)
-                    nextExpenseId++
-                }
-            )
-            Spacer(Modifier.height(10.dp))
-            LazyColumn() {
-                items(expenseList.size, itemContent = { index ->
-                    val expense = expenseList[index]
-                    for(e in expense) println(e)
-                    //TransactionCard(expense)
-                })*/
-
-
-/*@Composable
-fun MainScreen(modifier: Modifier = Modifier){
-    var expenseName by remember { mutableStateOf("") }
-    var expenseValue by remember { mutableDoubleStateOf(0.0) }
-    var isWasteful by remember { mutableStateOf(false) }
-    var nextExpenseId by remember { mutableIntStateOf(1)}
-    var expenseList = remember { mutableStateListOf<Transaction>()}
-
-
-    Column(modifier = Modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        ExpenseForm(
-            expenseName = expenseName,
-            expenseValue = expenseValue,
-            isWasteful = isWasteful,
-            expenseNameChanged = {expenseName = it},
-            expenseValueChanged = {expenseValue = it.toDouble()},
-            isWastefulValueChanged = {isWasteful = it},
-            {
-                val expense = Transaction(nextExpenseId, expenseName, expenseValue, false, isWasteful)
-                expenseList.add(expense)
-                nextExpenseId++
-            }
-        )
-        Spacer(Modifier.height(10.dp))
-        LazyColumn() {
-            items(expenseList.size, itemContent = { index ->
-                val expense = expenseList[index]
-                TransactionCard(expense)
-            })
-        }
-    }
-}*/
-
-/*
-@Composable
-fun SimpleInputApp(modifier: Modifier = Modifier){
-    var name by remember { mutableStateOf("your name") }
-    var displayName by remember { mutableStateOf("") }
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-        Text(
-            text = "Simple Input App",
-            fontSize = 30.sp,
-            modifier = Modifier
-                .padding(bottom = 24.dp)
-        )
-        OutlinedTextField(
-            value = name,
-            onValueChange = {
-                name = it
-                println("Name: $name")
-            },
-            label = {Text("Enter your name:")},
-            singleLine = true
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        Button(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = {
-                displayName = name
-                println("Button Clicked")
-            }
-        ) {
-            Text("Show name")
-        }
-
-        if(displayName.isNotBlank()){
-            Text(
-                text = "Hej, $displayName",
-                style = MaterialTheme.typography.headlineMedium
-            )
-        }else{
-            Text(modifier = Modifier
-                .padding(top=25.dp)
-                .align(Alignment.CenterHorizontally),
-                fontSize = 20.sp,
-                text = "Hej, ... nic nie wpisałeś!"
-            )
-        }
-
-        Spacer(modifier = Modifier.height(50.dp))
-        var count by remember { mutableStateOf(0) }
-        Button(onClick = {
-            count++
-            println("Button clicked $count times")
-        }) {
-            Text("Clicked $count times")
-            println("Jestem w ciele komponetnu Button (count = $count)")
-        }
-
-    }
-
-
-*/
-//podgląd
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview(){
-        MainScreen()
+    MainScreen()
 }
