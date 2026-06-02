@@ -23,9 +23,9 @@ fun TransactionCard(
         }  else {
             Text("${transaction.name} - ${transaction.amount} - ${
                 if(transaction.isImportant){
-                    "Niezbyteczny"
-                }  else {
                     "Zbyteczny"
+                }  else {
+                    "Niezbyteczny"
                 }
             }")
         }
