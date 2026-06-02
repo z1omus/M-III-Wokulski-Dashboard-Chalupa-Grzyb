@@ -1,14 +1,7 @@
 package com.example.wokolskidashboard.ui.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +48,7 @@ fun IncomeForm(onSubmit: (Transaction) -> Unit) {
 
 
         ButtonFun("Zapisz", onClick = {
-            val transaction = Transaction(name, amount.toDouble(), isIncome = true,false)
+            val transaction = Transaction(name, amount.toDouble(), isIncome = true, false)
             onSubmit(transaction)
             name="";amount="";isValid=false
         },
